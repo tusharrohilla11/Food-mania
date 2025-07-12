@@ -6,8 +6,8 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState({});
 
-  // const url = "https://foodmania-1gtj.onrender.com";
-  const url = "http://localhost:8000";
+ 
+  const url = "https://food-mania-backend-livid.vercel.app/";
 
   const [token, setToken] = useState("");
   const [food_list, setFoodList] = useState([]);
