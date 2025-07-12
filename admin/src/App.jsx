@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   
-  const url = "https://food-mania-backend-livid.vercel.app/";
+  const url = "https://food-mania-backend-livid.vercel.app";
 
   // axios.defaults.baseURL = ;
 
