@@ -3,7 +3,7 @@
 
 FoodMania - A full-stack food delivery application built with MERN stack by Tushar Rohilla.
 
-![FoodMania](frontend/src/assets/merneats-thumbnail.png)
+
 
 </div>
 
