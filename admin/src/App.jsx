@@ -10,8 +10,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
-  // const url = "https://foodmania-1gtj.onrender.com";
-  const url = "http://localhost:8000";
+  
+  const url = "https://food-mania-backend-livid.vercel.app/";
 
   // axios.defaults.baseURL = ;
 
