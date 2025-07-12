@@ -229,7 +229,7 @@ Here are listed all available API endpoints along with a brief description of ea
 
 ## Admin Pannel Preview
 
-![Admin-Pannel](frontend/src/assets/merneats-admin-thumbnail.png)
+
 
 ## 👤 Developer
 
