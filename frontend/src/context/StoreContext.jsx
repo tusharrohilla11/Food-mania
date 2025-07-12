@@ -7,7 +7,7 @@ const StoreContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState({});
 
  
-  const url = "https://food-mania-backend-livid.vercel.app/";
+  const url = "https://food-mania-backend-livid.vercel.app";
 
   const [token, setToken] = useState("");
   const [food_list, setFoodList] = useState([]);
