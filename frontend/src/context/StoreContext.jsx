@@ -60,21 +60,31 @@ const StoreContextProvider = ({ children }) => {
 
   // Fetching the food list from the DB.
   const fetchFoodList = useCallback(async () => {
-    const response = await axios.get(url + "/api/food/list");
-
-    setFoodList(response.data.data);
+    try {
+      console.log("Fetching food list from:", url + "/api/food/list");
+      const response = await axios.get(url + "/api/food/list");
+      console.log("Food list response:", response.data);
+      setFoodList(response.data.data);
+    } catch (error) {
+      console.error("Error fetching food list:", error);
+      console.error("Error details:", error.response?.data);
+    }
   }, [url]);
 
   // Load Cart Data fetches data from particular users data which displays the actual quantity has been added of every item.
   const loadCartData = async (token) => {
-    const response = await axios.post(
-      url + "/api/cart/get",
-      {},
-      { headers: { token } }
-    );
+    try {
+      const response = await axios.post(
+        url + "/api/cart/get",
+        {},
+        { headers: { token } }
+      );
 
-    // saving the cart data in cartItems variable
-    setCartItems(response.data.cartData);
+      // saving the cart data in cartItems variable
+      setCartItems(response.data.cartData);
+    } catch (error) {
+      console.error("Error loading cart data:", error);
+    }
   };
 
   useEffect(() => {
