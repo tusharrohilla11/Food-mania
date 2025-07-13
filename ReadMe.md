@@ -3,7 +3,7 @@
 
 FoodMania - A full-stack food delivery application built with MERN stack by Tushar Rohilla.
 
-![FoodMania](frontend/src/assets/merneats-thumbnail.png)
+
 
 </div>
 
@@ -228,8 +228,6 @@ Here are listed all available API endpoints along with a brief description of ea
 - `POST /api/order/status`: update status of all orders
 
 ## Admin Pannel Preview
-
-![Admin-Pannel](frontend/src/assets/merneats-admin-thumbnail.png)
 
 ## 👤 Developer
 
