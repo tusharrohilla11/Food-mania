@@ -22,16 +22,25 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// MongoDB connection
-let isConnected = false;
+// MongoDB connection with connection pooling for serverless
+let cachedConnection = null;
 const connectDB = async () => {
-  if (isConnected) return;
+  if (cachedConnection) {
+    return cachedConnection;
+  }
+
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    isConnected = true;
+    const connection = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      maxPoolSize: 1, // Serverless functions work better with smaller pools
+    });
+    cachedConnection = connection;
     console.log("DB connected");
+    return connection;
   } catch (err) {
     console.error("DB connection error:", err);
+    throw err;
   }
 };
 
@@ -46,7 +55,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.models.user || mongoose.model("user", userSchema);
 
-// Food Model
+// Food Model  
 const foodSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
@@ -58,8 +67,13 @@ const foodSchema = new mongoose.Schema({
 const Food = mongoose.models.food || mongoose.model("food", foodSchema);
 
 // Routes
-app.get("/", (req, res) => {
-  res.json({ message: "API Working", status: "success" });
+app.get("/", async (req, res) => {
+  try {
+    await connectDB();
+    res.json({ message: "FoodMania API Working Successfully!", status: "success", database: "connected" });
+  } catch (error) {
+    res.json({ message: "API Working but DB connection failed", status: "error", error: error.message });
+  }
 });
 
 // Get all food items
@@ -67,35 +81,44 @@ app.get("/api/food/list", async (req, res) => {
   try {
     await connectDB();
     const foods = await Food.find({});
+    console.log(`Found ${foods.length} food items`);
     res.json({ success: true, data: foods });
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Error fetching food items" });
+    console.error("Error fetching food items:", error);
+    res.json({ success: false, message: "Error fetching food items", error: error.message });
   }
 });
 
 // Register user
 app.post("/api/user/register", async (req, res) => {
   const { name, password, email } = req.body;
+  
   try {
     await connectDB();
     
+    console.log("Registration attempt for:", email);
+    
+    // Check if user exists
     const exists = await User.findOne({ email });
     if (exists) {
       return res.json({ success: false, message: "User already exists!" });
     }
 
+    // Validate email
     if (!validator.isEmail(email)) {
       return res.json({ success: false, message: "Please enter valid email!" });
     }
 
+    // Check password length
     if (password.length < 6) {
       return res.json({ success: false, message: "Please enter a strong password!" });
     }
 
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Check if admin
     const isAdmin = email === "tusharrohilla1121@gmail.com";
     
     const newUser = new User({
@@ -107,18 +130,24 @@ app.post("/api/user/register", async (req, res) => {
 
     const user = await newUser.save();
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    res.json({ success: true, token });
+    
+    console.log("User registered successfully:", email, "Admin:", isAdmin);
+    res.json({ success: true, token, message: "Registration successful!" });
+    
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Registration failed" });
+    console.error("Registration error:", error);
+    res.json({ success: false, message: "Registration failed", error: error.message });
   }
 });
 
 // Login user
 app.post("/api/user/login", async (req, res) => {
   const { email, password } = req.body;
+  
   try {
     await connectDB();
+    
+    console.log("Login attempt for:", email);
     
     const user = await User.findOne({ email });
     if (!user) {
@@ -131,11 +160,28 @@ app.post("/api/user/login", async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    res.json({ success: true, token });
+    
+    console.log("Login successful for:", email);
+    res.json({ success: true, token, message: "Login successful!" });
+    
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Login failed" });
+    console.error("Login error:", error);
+    res.json({ success: false, message: "Login failed", error: error.message });
   }
+});
+
+// Handle all other routes
+app.use("*", (req, res) => {
+  res.status(404).json({ 
+    success: false, 
+    message: "Route not found", 
+    availableRoutes: [
+      "GET /",
+      "GET /api/food/list", 
+      "POST /api/user/register",
+      "POST /api/user/login"
+    ]
+  });
 });
 
 module.exports = app;
