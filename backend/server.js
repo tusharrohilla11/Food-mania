@@ -17,8 +17,10 @@ app.use(cors({
     "http://localhost:5173",
     "http://localhost:5174", 
     "http://localhost:5175",
-    "https://food-mania-frontend-tushar-rohillas-projects.vercel.app", // Add your frontend URL
-    "https://food-mania-admin-tushar-rohillas-projects.vercel.app"      // Add your admin URL
+    "https://food-mania-henna.vercel.app",
+    "https://food-mania-admin-nine.vercel.app",
+    "https://food-mania-frontend-tushar-rohillas-projects.vercel.app",
+    "https://food-mania-admin-tushar-rohillas-projects.vercel.app"
   ],
   credentials: true
 }));
@@ -38,9 +40,12 @@ app.get("/", (req, res) => {
   res.send("API Working");
 });
 
-app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}`);
-});
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`Server started on http://localhost:${port}`);
+  });
+}
 
 // Export for Vercel
-module.exports = app;
+export default app;
