@@ -229,6 +229,11 @@ Here are listed all available API endpoints along with a brief description of ea
 
 ## Admin Pannel Preview
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 87b35c250d6269f488f5d145e9a1c9f28768aaa6
 ## 👤 Developer
 
 [Tushar Rohilla](https://github.com/tusharrohilla11)

@@ -11,8 +11,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   
+<<<<<<< HEAD
   // const url = "http://localhost:8000";
   const url = "https://food-mania-backend-livid.vercel.app"; // Remove trailing slash
+=======
+  const url = "https://food-mania-backend-livid.vercel.app";
+>>>>>>> 87b35c250d6269f488f5d145e9a1c9f28768aaa6
 
   // axios.defaults.baseURL = ;
 
